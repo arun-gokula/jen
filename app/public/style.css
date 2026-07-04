@@ -1,0 +1,100 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(135deg, rgba(30,60,114,0.85), rgba(42,82,152,0.85)),
+                url('https://picsum.photos/1600/900?blur=2') center/cover no-repeat fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 50px 60px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+    text-align: center;
+    width: 380px;
+}
+
+.card h1 {
+    font-size: 2rem;
+    margin-bottom: 8px;
+}
+
+.card p.subtitle {
+    opacity: 0.8;
+    margin-bottom: 25px;
+    font-size: 0.9rem;
+}
+
+input {
+    width: 100%;
+    padding: 12px 14px;
+    margin: 8px 0;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    font-size: 0.95rem;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #1e3c72;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+button:hover {
+    background: #f0f0f0;
+    transform: translateY(-2px);
+}
+
+.link {
+    display: block;
+    margin-top: 18px;
+    color: #cfe2ff;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.link:hover { text-decoration: underline; }
+
+.message {
+    margin-top: 12px;
+    font-size: 0.85rem;
+    min-height: 18px;
+}
+
+.error { color: #ff8080; }
+.success { color: #80ffb0; }
+
+.icon {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.dashboard-card {
+    width: 480px;
+}
+
+.avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 20px;
+    display: block;
+    border: 3px solid rgba(255,255,255,0.4);
+}

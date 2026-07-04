@@ -1,0 +1,43 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER = "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Stop Containers') {
+            steps {
+                bat "\"%DOCKER%\" compose stop || exit 0"
+            }
+        }
+
+        stage('Remove Containers and Network') {
+            steps {
+                bat "\"%DOCKER%\" compose down || exit 0"
+            }
+        }
+
+        stage('Verify Cleanup') {
+            steps {
+                bat "\"%DOCKER%\" ps -a"
+                bat "\"%DOCKER%\" volume ls"
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Containers stopped and removed. Database volume preserved."
+        }
+        failure {
+            echo "Cleanup pipeline failed. Check logs above."
+        }
+    }
+}

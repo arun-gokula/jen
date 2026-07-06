@@ -1,9 +1,13 @@
+def dockerCmd(String args) {
+    if (isUnix()) {
+        sh "docker ${args}"
+    } else {
+        bat "\"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe\" ${args}"
+    }
+}
+
 pipeline {
     agent any
-
-    environment {
-        DOCKER = "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe"
-    }
 
     stages {
         stage('Checkout') {
@@ -14,20 +18,45 @@ pipeline {
 
         stage('Stop Containers') {
             steps {
-                bat "\"%DOCKER%\" compose stop || exit 0"
+                script {
+                    try {
+                        dockerCmd("stop hello-app-container userdb-container")
+                    } catch (e) {
+                        echo "Containers already stopped or not running."
+                    }
+                }
             }
         }
 
-        stage('Remove Containers and Network') {
+        stage('Remove Containers') {
             steps {
-                bat "\"%DOCKER%\" compose down || exit 0"
+                script {
+                    try {
+                        dockerCmd("rm hello-app-container userdb-container")
+                    } catch (e) {
+                        echo "Containers already removed."
+                    }
+                }
+            }
+        }
+
+        stage('Remove Compose Network') {
+            steps {
+                script {
+                    try {
+                        dockerCmd("network rm jenkinsproject_default")
+                    } catch (e) {
+                        echo "Network already removed or not found."
+                    }
+                }
             }
         }
 
         stage('Verify Cleanup') {
             steps {
-                bat "\"%DOCKER%\" ps -a"
-                bat "\"%DOCKER%\" volume ls"
+                dockerCmd("ps -a")
+                dockerCmd("volume ls")
+                dockerCmd("network ls")
             }
         }
     }

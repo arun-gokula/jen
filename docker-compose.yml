@@ -32,7 +32,7 @@ services:
       DB_PASSWORD: rootpass
       DB_NAME: userdb
     ports:
-      - "80:3000"
+      - "8080:3000"
 
 volumes:
   db_data:

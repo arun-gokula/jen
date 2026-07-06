@@ -1,21 +1,9 @@
-def dockerCmd(String args) {
-    if (isUnix()) {
-        sh "docker ${args}"
-    } else {
-        bat "\"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe\" ${args}"
-    }
-}
-
-def waitSeconds(int seconds) {
-    if (isUnix()) {
-        sh "sleep ${seconds}"
-    } else {
-        bat "ping -n ${seconds} 127.0.0.1 > nul"
-    }
-}
-
 pipeline {
     agent any
+
+    environment {
+        DOCKER = "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe"
+    }
 
     stages {
         stage('Checkout') {
@@ -28,12 +16,12 @@ pipeline {
             stages {
                 stage('Build App Image') {
                     steps {
-                        dockerCmd("compose build app")
+                        bat "\"%DOCKER%\" compose build app"
                     }
                 }
                 stage('Validate Compose Config') {
                     steps {
-                        dockerCmd("compose config")
+                        bat "\"%DOCKER%\" compose config"
                     }
                 }
             }
@@ -43,28 +31,22 @@ pipeline {
             stages {
                 stage('Stop Existing Containers') {
                     steps {
-                        script {
-                            try {
-                                dockerCmd("compose down")
-                            } catch (e) {
-                                echo "No existing containers to stop, continuing..."
-                            }
-                        }
+                        bat "\"%DOCKER%\" compose down || exit 0"
                     }
                 }
                 stage('Start Database Container') {
                     steps {
-                        dockerCmd("compose up -d db")
+                        bat "\"%DOCKER%\" compose up -d db"
                     }
                 }
                 stage('Wait for Database Health') {
                     steps {
-                        waitSeconds(20)
+                        bat "ping -n 20 127.0.0.1 > nul"
                     }
                 }
                 stage('Start Application Container') {
                     steps {
-                        dockerCmd("compose up -d app")
+                        bat "\"%DOCKER%\" compose up -d app"
                     }
                 }
             }
@@ -72,7 +54,7 @@ pipeline {
 
         stage('Verify') {
             steps {
-                dockerCmd("compose ps")
+                bat "\"%DOCKER%\" compose ps"
             }
         }
     }

@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER = "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe"
+        DOCKER = "docker"
     }
 
     stages {
@@ -16,12 +16,12 @@ pipeline {
             stages {
                 stage('Build App Image') {
                     steps {
-                        sh "\"%DOCKER%\" compose build app"
+                        sh "docker compose build app"
                     }
                 }
                 stage('Validate Compose Config') {
                     steps {
-                        sh "\"%DOCKER%\" compose config"
+                        sh "docker compose config"
                     }
                 }
             }
@@ -31,22 +31,22 @@ pipeline {
             stages {
                 stage('Stop Existing Containers') {
                     steps {
-                        sh "\"%DOCKER%\" compose down || exit 0"
+                        sh "docker compose down || exit 0"
                     }
                 }
                 stage('Start Database Container') {
                     steps {
-                        sh "\"%DOCKER%\" compose up -d db"
+                        sh "docker compose up -d db"
                     }
                 }
                 stage('Wait for Database Health') {
                     steps {
-                        sh "ping -n 15 127.0.0.1 > nul"
+                        sh "sleep 15"
                     }
                 }
                 stage('Start Application Container') {
                     steps {
-                        sh "\"%DOCKER%\" compose up -d app"
+                        sh "docker compose up -d app"
                     }
                 }
             }
@@ -54,7 +54,7 @@ pipeline {
 
         stage('Verify') {
             steps {
-                sh "\"%DOCKER%\" compose ps"
+                sh "docker compose ps"
             }
         }
     }

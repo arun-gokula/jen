@@ -16,12 +16,12 @@ pipeline {
             stages {
                 stage('Build App Image') {
                     steps {
-                        bat "\"%DOCKER%\" compose build app"
+                        sh "\"%DOCKER%\" compose build app"
                     }
                 }
                 stage('Validate Compose Config') {
                     steps {
-                        bat "\"%DOCKER%\" compose config"
+                        sh "\"%DOCKER%\" compose config"
                     }
                 }
             }
@@ -31,22 +31,22 @@ pipeline {
             stages {
                 stage('Stop Existing Containers') {
                     steps {
-                        bat "\"%DOCKER%\" compose down || exit 0"
+                        sh "\"%DOCKER%\" compose down || exit 0"
                     }
                 }
                 stage('Start Database Container') {
                     steps {
-                        bat "\"%DOCKER%\" compose up -d db"
+                        sh "\"%DOCKER%\" compose up -d db"
                     }
                 }
                 stage('Wait for Database Health') {
                     steps {
-                        bat "ping -n 15 127.0.0.1 > nul"
+                        sh "ping -n 15 127.0.0.1 > nul"
                     }
                 }
                 stage('Start Application Container') {
                     steps {
-                        bat "\"%DOCKER%\" compose up -d app"
+                        sh "\"%DOCKER%\" compose up -d app"
                     }
                 }
             }
@@ -54,7 +54,7 @@ pipeline {
 
         stage('Verify') {
             steps {
-                bat "\"%DOCKER%\" compose ps"
+                sh "\"%DOCKER%\" compose ps"
             }
         }
     }

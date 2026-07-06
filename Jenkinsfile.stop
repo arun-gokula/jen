@@ -1,6 +1,6 @@
 def dockerCmd(String args) {
     if (isUnix()) {
-        sh "docker ${args}"
+        sh "/usr/local/bin/docker ${args}"
     } else {
         bat "\"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe\" ${args}"
     }

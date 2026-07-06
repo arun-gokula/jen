@@ -12,12 +12,12 @@ pipeline {
             stages {
                 stage('Build App Image') {
                     steps {
-                        sh "docker compose build app"
+                        sh "/usr/local/bin/docker compose build app"
                     }
                 }
                 stage('Validate Compose Config') {
                     steps {
-                        sh "docker compose config"
+                        sh "/usr/local/bin/docker compose config"
                     }
                 }
             }
@@ -27,12 +27,12 @@ pipeline {
             stages {
                 stage('Stop Existing Containers') {
                     steps {
-                        sh "docker compose down || true"
+                        sh "/usr/local/bin/docker compose down || true"
                     }
                 }
                 stage('Start Database Container') {
                     steps {
-                        sh "docker compose up -d db"
+                        sh "/usr/local/bin/docker compose up -d db"
                     }
                 }
                 stage('Wait for Database Health') {
@@ -42,7 +42,7 @@ pipeline {
                 }
                 stage('Start Application Container') {
                     steps {
-                        sh "docker compose up -d app"
+                        sh "/usr/local/bin/docker compose up -d app"
                     }
                 }
             }
@@ -50,7 +50,7 @@ pipeline {
 
         stage('Verify') {
             steps {
-                sh "docker compose ps"
+                sh "/usr/local/bin/docker compose ps"
             }
         }
     }
